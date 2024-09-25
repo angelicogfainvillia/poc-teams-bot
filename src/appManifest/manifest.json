@@ -1,0 +1,46 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.16",
+    "version": "1.1.0",
+    "id": "f28ec888-3db2-433b-b84f-fdbc562872db",
+    "packageName": "com.invillia.teams.aimanagment.botai",
+    "developer": {
+        "name": "Invillia - TARS",
+        "websiteUrl": "https://invillia.ai/accelerate-digital-product/",
+        "privacyUrl": "https://invillia.ai/privacy/",
+        "termsOfUseUrl": "https://invillia.ai/terms/"
+    },
+    "name": {
+        "short": "LIA ⠇⠊⠁Copilot_",
+        "full": "LIA ⠇⠊⠁- The Leader's Copilot_"
+    },
+    "description": {
+        "short": "Apoio na tomada de decisão",
+        "full": "Agente de IA corporativo da Invillia para auxiliar na tomada de decisão"
+    },
+    "icons": {
+        "outline": "outline.png",
+        "color": "color.png"
+    },
+    "accentColor": "#e86c00",
+    "bots": [
+        {
+            "botId": "518c71cb-6306-46f5-9aa3-35376366fedf",
+            "scopes": [
+                "personal",
+                "groupchat",
+                "team"
+            ],
+            "needsChannelSelector": false,
+            "isNotificationOnly": false,
+            "supportsFiles": false,
+            "supportsCalling": false,
+            "supportsVideo": false
+        }
+    ],
+    "validDomains": [
+       
+    ],
+    "authorization": {
+    }
+}

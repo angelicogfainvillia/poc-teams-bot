@@ -1,0 +1,15 @@
+name: '01 - Create Release'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  call-workflow-create-release:
+    uses: plataforma-ia/invillia-shared-pipelines/.github/workflows/create-release.yml@main
+    with:
+      WORKFLOW_DISPATCHER: '02 - Create Docker Image'
+      WORKFLOW_DISPATCHER_AWAIT: false
+    secrets: inherit

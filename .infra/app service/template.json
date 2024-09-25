@@ -1,0 +1,494 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_invillia_aimanagment_aibot_api_002_name": {
+            "defaultValue": "invillia-aimanagment-aibot-api-002",
+            "type": "String"
+        },
+        "serverfarms_asp_aimanagment_prd_001_externalid": {
+            "defaultValue": "/subscriptions/723e9fe3-af04-4b6f-b90a-89a3ae2b7ad4/resourceGroups/RG-AIMANAGMENT-BOT-PROD-EASTUS2-001/providers/Microsoft.Web/serverfarms/asp-aimanagment-prd-001",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2023-12-01",
+            "name": "[parameters('sites_invillia_aimanagment_aibot_api_002_name')]",
+            "location": "East US 2",
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_asp_aimanagment_prd_001_externalid')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "dnsConfiguration": {},
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOCKER|craiplatformsharedprod001.azurecr.io/aimanagment-bot:v0.7.0",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 1
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "vnetBackupRestoreEnabled": false,
+                "customDomainVerificationId": "249FD08387953B580719A587548BF8C4D950DE51575D20FECACAE0AEFF0E7444",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "publicNetworkAccess": "Enabled",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/ftp')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/scm')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/web')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOCKER|craiplatformsharedprod001.azurecr.io/aimanagment-bot:v0.7.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$invillia-aimanagment-aibot-api-002",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "publicNetworkAccess": "Enabled",
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 1,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/02bf72a7356016abd93a11f69e18b2f3c532a4e01719423134398')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"02bf72a7356016abd93a11f69e18b2f3c532a4e0\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-06-26T17:32:15.4798333Z",
+                "end_time": "2024-06-26T17:32:15.4798333Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/084d0c7cb92454b5a8a60d54b6a8eb2a548f94001724162940675')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"084d0c7cb92454b5a8a60d54b6a8eb2a548f9400\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-08-20T14:09:01.906008Z",
+                "end_time": "2024-08-20T14:09:01.906008Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/1d187af65967e055973e0a5f060b346913c6ecc81721321070072')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"1d187af65967e055973e0a5f060b346913c6ecc8\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-18T16:44:54.1655156Z",
+                "end_time": "2024-07-18T16:44:54.1655156Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/2de03c70390a26b0182cbd59d4cd640e868e948c1721314182621')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"2de03c70390a26b0182cbd59d4cd640e868e948c\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-18T14:49:44.0230444Z",
+                "end_time": "2024-07-18T14:49:44.0230444Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/553713aad5ba8a0e885a8b2193ae7387c356a4391719427306035')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"553713aad5ba8a0e885a8b2193ae7387c356a439\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-06-26T18:41:46.8628484Z",
+                "end_time": "2024-06-26T18:41:46.8628484Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/61b290b26950c6241bcc1827f5aef979761f7d9f1723557618734')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"61b290b26950c6241bcc1827f5aef979761f7d9f\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-08-13T14:00:29.5808913Z",
+                "end_time": "2024-08-13T14:00:29.5808913Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/832e7a001352732724b586d6f0c7bb7648ea72241721336674115')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"832e7a001352732724b586d6f0c7bb7648ea7224\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-18T21:04:35.1003891Z",
+                "end_time": "2024-07-18T21:04:35.1003891Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/942c7d62b2b174b7ec009e2b60866081f19f725d1720551923743')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"942c7d62b2b174b7ec009e2b60866081f19f725d\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-09T19:05:53.8899735Z",
+                "end_time": "2024-07-09T19:05:53.8899735Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/94e7e645cc82d8c8cbbc59d9c164e7edea8f7c6c1719421237775')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"94e7e645cc82d8c8cbbc59d9c164e7edea8f7c6c\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-06-26T17:00:38.6157753Z",
+                "end_time": "2024-06-26T17:00:38.6157753Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/b0a0f19b14484318d1f1a43c31e82db5e4197ea31721338622488')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"b0a0f19b14484318d1f1a43c31e82db5e4197ea3\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-18T21:37:03.5444576Z",
+                "end_time": "2024-07-18T21:37:03.5444576Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/d13118b1da1e7da1b62719a0188b3c4511cebe281719412732441')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"d13118b1da1e7da1b62719a0188b3c4511cebe28\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-06-26T14:38:53.6969374Z",
+                "end_time": "2024-06-26T14:38:53.6969374Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/d13118b1da1e7da1b62719a0188b3c4511cebe281719412989083')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "ro-anderson2",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"d13118b1da1e7da1b62719a0188b3c4511cebe28\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"ro-anderson2\",\"slotName\":\"production\"}",
+                "start_time": "2024-06-26T14:43:10.0888556Z",
+                "end_time": "2024-06-26T14:43:10.0888556Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/dcd3707be1e795f6f5627c64cc9cf6403f9485aa1721741168116')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"dcd3707be1e795f6f5627c64cc9cf6403f9485aa\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-23T13:26:08.845571Z",
+                "end_time": "2024-07-23T13:26:08.845571Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/dcd3707be1e795f6f5627c64cc9cf6403f9485aa1721741215770')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"dcd3707be1e795f6f5627c64cc9cf6403f9485aa\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-23T13:26:56.8270651Z",
+                "end_time": "2024-07-23T13:26:56.8270651Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/dcd3707be1e795f6f5627c64cc9cf6403f9485aa1721755986985')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"dcd3707be1e795f6f5627c64cc9cf6403f9485aa\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-23T17:33:27.6383576Z",
+                "end_time": "2024-07-23T17:33:27.6383576Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/eafeec3f59da47f931326f9f864d7ccbcdc3c0041721334813514')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"eafeec3f59da47f931326f9f864d7ccbcdc3c004\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-07-18T20:33:34.5422881Z",
+                "end_time": "2024-07-18T20:33:34.5422881Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/f2e6414c75ac8fbdd3fb0f2548a6436758f53a521719426040654')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author": "angelicogfainvillia",
+                "deployer": "GitHub",
+                "message": "{\"type\":\"Deployment\",\"sha\":\"f2e6414c75ac8fbdd3fb0f2548a6436758f53a52\",\"repoName\":\"plataforma-ia/invillia-aimanagment-botintelligence-bot\",\"actor\":\"angelicogfainvillia\",\"slotName\":\"production\"}",
+                "start_time": "2024-06-26T18:20:41.3178315Z",
+                "end_time": "2024-06-26T18:20:41.3178315Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_invillia_aimanagment_aibot_api_002_name'), '/', parameters('sites_invillia_aimanagment_aibot_api_002_name'), '.azurewebsites.net')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_invillia_aimanagment_aibot_api_002_name'))]"
+            ],
+            "properties": {
+                "siteName": "invillia-aimanagment-aibot-api-002",
+                "hostNameType": "Verified"
+            }
+        }
+    ]
+}

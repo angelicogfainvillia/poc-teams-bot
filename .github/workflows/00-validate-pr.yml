@@ -1,0 +1,41 @@
+name: '00 - Validate PR'
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+
+  pull_request:
+    branches:
+      - develop
+      - release/**
+      - hotfix/**
+    types:
+      - opened
+      - edited
+      - synchronize
+
+permissions:
+  contents: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.repository.is_template && github.event_name == 'push' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black
+      - name: Analysing the code with black
+        run: |
+          black --check ./src

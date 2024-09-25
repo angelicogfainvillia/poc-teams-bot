@@ -1,0 +1,30 @@
+image: angelicogfa/zip-curl-python-gcc
+
+variables:
+  # Variáveis para FTP
+  domainService: 'invillia-aimanagment-aibot-api'
+  deploymentToken: 'JGludmlsbGlhLWFpbWFuYWdtZW50LWFpYm90LWFwaTpmdHFHb29xaVFxclNlV3VHeW83bWV6eFJRaUxXa0tkRHUxNHJtamZ0YUxNZGlveXQxSG9FVGd2MHVOWVg='
+
+stages:
+- build
+
+deploy_prod:
+  stage: build
+  tags:
+    - docker
+  only:
+  - develop
+  script:
+    - echo 'Navegando para diretório ./src'
+    - cd ./src
+    - echo 'Criando virtual antenv'
+    - python -m venv ./antenv
+    - source ./antenv/bin/activate
+    - echo 'Instalando dependências'
+    - python -m pip install -r ./requirements.txt
+    - echo 'Compactando src.zip'
+    - zip -r src.zip *
+    - echo 'Fazendo deploy do arquivo src.zip'
+    - 'curl --location "https://$domainService.scm.azurewebsites.net/api/zipdeploy" --header "Authorization: Basic $deploymentToken" --header "Content-Type: application/zip" --data-binary "@./src.zip"'
+    - echo 'Processo executado'
+  when: manual

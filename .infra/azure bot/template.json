@@ -1,0 +1,110 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "botServices_bot_aimanagment_teams_prd_001_name": {
+            "defaultValue": "bot-aimanagment-teams-prd-001",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.BotService/botServices",
+            "apiVersion": "2023-09-15-preview",
+            "name": "[parameters('botServices_bot_aimanagment_teams_prd_001_name')]",
+            "location": "global",
+            "sku": {
+                "name": "S1"
+            },
+            "kind": "azurebot",
+            "properties": {
+                "displayName": "LIA ⠇⠊⠁- The Leader's Copilot_",
+                "description": "LIA ⠇⠊⠁- The Leader's Copilot_ Agente de IA corporativo da Invillia para auxiliar na tomada de decisão",
+                "iconUrl": "[concat('//bot-framework.azureedge.net/bot-icons-v1/', parameters('botServices_bot_aimanagment_teams_prd_001_name'), '_7bVE7H2RsAKH6MJDCQ8ulBJWFghECD1Uf7fpAJE93ICtW1qJ.png')]",
+                "endpoint": "https://invillia-aimanagment-aibot-api-002.azurewebsites.net/api/messages",
+                "msaAppId": "518c71cb-6306-46f5-9aa3-35376366fedf",
+                "msaAppType": "MultiTenant",
+                "luisAppIds": [],
+                "isStreamingSupported": false,
+                "schemaTransformationVersion": "1.3",
+                "tenantId": "42b15616-327f-44b1-93a4-c2ebfe032fc7",
+                "isCmekEnabled": false,
+                "disableLocalAuth": false
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices/channels",
+            "apiVersion": "2023-09-15-preview",
+            "name": "[concat(parameters('botServices_bot_aimanagment_teams_prd_001_name'), '/DirectLineChannel')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.BotService/botServices', parameters('botServices_bot_aimanagment_teams_prd_001_name'))]"
+            ],
+            "properties": {
+                "properties": {
+                    "sites": [
+                        {
+                            "siteName": "Default Site",
+                            "isEnabled": true,
+                            "isV1Enabled": true,
+                            "isV3Enabled": true,
+                            "isSecureSiteEnabled": false,
+                            "isBlockUserUploadEnabled": false
+                        }
+                    ],
+                    "extensionKey1": "IJsdNvDXxiY.5kSDL2SJUXnfjQ2TQBtRjHn7zktFUpkJX1CCetiODIk",
+                    "extensionKey2": "IJsdNvDXxiY.HcUjWno_r7s3KZMB9LaL-nMMhCwpsER2Luaz901GrtA"
+                },
+                "etag": "W/\"be22fb915ec6af8e4e8fd363a271d62c8/20/2024 6:23:36 PM\"",
+                "channelName": "DirectLineChannel",
+                "location": "global"
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices/channels",
+            "apiVersion": "2023-09-15-preview",
+            "name": "[concat(parameters('botServices_bot_aimanagment_teams_prd_001_name'), '/MsTeamsChannel')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.BotService/botServices', parameters('botServices_bot_aimanagment_teams_prd_001_name'))]"
+            ],
+            "properties": {
+                "properties": {
+                    "enableCalling": false,
+                    "incomingCallRoute": "graphPma",
+                    "isEnabled": true,
+                    "deploymentEnvironment": "CommercialDeployment",
+                    "acceptedTerms": true
+                },
+                "etag": "W/\"bfd284d1a8e61ecf5c27ef9d858944e08/20/2024 6:23:36 PM\"",
+                "channelName": "MsTeamsChannel",
+                "location": "global"
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices/channels",
+            "apiVersion": "2023-09-15-preview",
+            "name": "[concat(parameters('botServices_bot_aimanagment_teams_prd_001_name'), '/WebChatChannel')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.BotService/botServices', parameters('botServices_bot_aimanagment_teams_prd_001_name'))]"
+            ],
+            "properties": {
+                "properties": {
+                    "sites": [
+                        {
+                            "siteName": "Default Site",
+                            "isEnabled": true,
+                            "isWebchatPreviewEnabled": true,
+                            "isBlockUserUploadEnabled": false
+                        }
+                    ]
+                },
+                "etag": "W/\"4f9e95aba6cda9e68d5bcd58154cc0c58/20/2024 6:23:36 PM\"",
+                "channelName": "WebChatChannel",
+                "location": "global"
+            }
+        }
+    ]
+}
